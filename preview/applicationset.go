@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	appsettemplate "github.com/argoproj/argo-cd/v2/applicationset/controllers/template"
@@ -116,6 +117,7 @@ func PreviewResources(filename string, appName string, output string) {
 				log.Fatal("failed to generate manifest: ", err)
 			}
 
+			kinds := make([]string, 0)
 			resources := map[string][]unstructured.Unstructured{}
 			for _, manifest := range response.Manifests {
 				resource := unstructured.Unstructured{}
@@ -123,28 +125,30 @@ func PreviewResources(filename string, appName string, output string) {
 				errors.CheckError(err)
 
 				kind := strings.ToLower(resource.GetKind())
+				kinds = append(kinds, kind)
 				if _, ok := resources[kind]; !ok {
 					resources[kind] = make([]unstructured.Unstructured, 0)
 				}
 				resources[kind] = append(resources[kind], resource)
 			}
+			sort.Strings(kinds)
 			switch output {
 			case "name":
 				printNewline := true
-				for kind, kindResources := range resources {
+				for _, kind := range kinds {
 					if printNewline {
 						printNewline = false
 					} else {
 						fmt.Println()
 					}
 					fmt.Println("NAME")
-					for _, resource := range kindResources {
+					for _, resource := range resources[kind] {
 						fmt.Printf("%s/%s\n", kind, resource.GetName())
 					}
 				}
 			case "json", "yaml":
-				for _, kindResources := range resources {
-					argocmd.PrintResourceList(kindResources, output, false)
+				for _, kind := range kinds {
+					argocmd.PrintResourceList(resources[kind], output, false)
 				}
 
 			default:
