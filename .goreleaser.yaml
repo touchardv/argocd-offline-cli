@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - goos:
+      - darwin
+      - linux
+    ignore:
+      - goos: linux
+        goarch: '386'
+    main: ./cmd/

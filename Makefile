@@ -17,7 +17,7 @@ $(BUILD_DIR)/$(BINARY): $(BUILD_DIR) $(SOURCES)
 
 .PHONY: clean
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) dist
 	go clean ./...
 
 .PHONY: run
