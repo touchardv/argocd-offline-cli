@@ -51,6 +51,7 @@ func PreviewApplicationsCommand() *cobra.Command {
 }
 
 func PreviewApplicationResourcesCommand() *cobra.Command {
+	var kind string
 	var name string
 	var output string
 	command := &cobra.Command{
@@ -62,9 +63,10 @@ func PreviewApplicationResourcesCommand() *cobra.Command {
 				os.Exit(1)
 			}
 			filename := args[0]
-			preview.PreviewResources(filename, name, output)
+			preview.PreviewResources(filename, name, kind, output)
 		},
 	}
+	command.Flags().StringVarP(&kind, "kind", "k", "", "Kind of resources to preview")
 	command.Flags().StringVarP(&name, "name", "n", "", "Name of the Application to preview")
 	command.Flags().StringVarP(&output, "output", "o", "name", "Output format. One of: name|json|yaml")
 	return command

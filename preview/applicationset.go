@@ -75,7 +75,7 @@ func PreviewApplications(filename string, appName string, output string) {
 	}
 }
 
-func PreviewResources(filename string, appName string, output string) {
+func PreviewResources(filename string, appName string, resKind string, output string) {
 	max, err := resource.ParseQuantity("100G")
 	errors.CheckError(err)
 	maxValue := max.ToDec().Value()
@@ -124,10 +124,12 @@ func PreviewResources(filename string, appName string, output string) {
 				errors.CheckError(err)
 
 				kind := strings.ToLower(resource.GetKind())
-				if _, ok := resources[kind]; !ok {
-					resources[kind] = make([]unstructured.Unstructured, 0)
+				if !shouldMatch(resKind) || resKind == kind {
+					if _, ok := resources[kind]; !ok {
+						resources[kind] = make([]unstructured.Unstructured, 0)
+					}
+					resources[kind] = append(resources[kind], resource)
 				}
-				resources[kind] = append(resources[kind], resource)
 			}
 			kinds := make([]string, 0)
 			for kind := range resources {
@@ -195,6 +197,6 @@ func getAppSetGenerators() map[string]generators.Generator {
 	return topLevelGenerators
 }
 
-func shouldMatch(appName string) bool {
-	return len(appName) > 0
+func shouldMatch(v string) bool {
+	return len(v) > 0
 }
