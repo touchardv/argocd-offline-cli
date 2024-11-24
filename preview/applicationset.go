@@ -117,7 +117,6 @@ func PreviewResources(filename string, appName string, output string) {
 				log.Fatal("failed to generate manifest: ", err)
 			}
 
-			kinds := make([]string, 0)
 			resources := map[string][]unstructured.Unstructured{}
 			for _, manifest := range response.Manifests {
 				resource := unstructured.Unstructured{}
@@ -125,11 +124,14 @@ func PreviewResources(filename string, appName string, output string) {
 				errors.CheckError(err)
 
 				kind := strings.ToLower(resource.GetKind())
-				kinds = append(kinds, kind)
 				if _, ok := resources[kind]; !ok {
 					resources[kind] = make([]unstructured.Unstructured, 0)
 				}
 				resources[kind] = append(resources[kind], resource)
+			}
+			kinds := make([]string, 0)
+			for kind := range resources {
+				kinds = append(kinds, kind)
 			}
 			sort.Strings(kinds)
 			switch output {
