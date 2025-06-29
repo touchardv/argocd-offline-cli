@@ -1,6 +1,6 @@
 module github.com/touchardv/argocd-offline-cli
 
-go 1.23
+go 1.24
 
 require (
 	github.com/argoproj/argo-cd/v2 v2.13.0
