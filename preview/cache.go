@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/argoproj/argo-cd/v2/reposerver/cache"
-	cacheutil "github.com/argoproj/argo-cd/v2/util/cache"
+	"github.com/argoproj/argo-cd/v3/reposerver/cache"
+	cacheutil "github.com/argoproj/argo-cd/v3/util/cache"
 )
 
 type NoopCacheClient struct{}
